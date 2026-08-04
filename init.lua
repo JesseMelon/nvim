@@ -71,6 +71,9 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.opt.rtp:prepend(lazypath)
 
+-- Do this so neotree doesnt resize on close
+vim.opt.equalalways = false
+
 vim.opt.relativenumber = true
 vim.opt.number = true                  -- Keep the current line's absolute number
 vim.opt.formatoptions:remove("r", "o") -- dont auto comment
@@ -84,7 +87,9 @@ vim.keymap.set("", "<R-Ctrl>", "<Esc>", { noremap = true, silent = true })
 
 -- vim.keymap.set('n', '<leader>f', ':!astyle --style=java --indent=spaces=4 --max-code-length=150 %<CR>', { noremap = true, silent = true })
 
+-- leader # to auto comment section around line
 vim.keymap.set('n', '<leader>#', 'O#<esc>79a=<esc>jo#<esc>79a-<esc>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>c', 'O/*<esc>78a=<esc>jo<esc>78a-<esc>a*/<esc>', { noremap = true, silent = true })
 
 vim.opt.clipboard:append("unnamedplus")
 

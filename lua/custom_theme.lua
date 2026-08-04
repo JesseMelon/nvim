@@ -11,7 +11,7 @@ local theme = lush(function()
         EndOfBuffer { bg = "none", fg = hsl(160, 40, 40) },
         SignColumn { bg = "none" },
         FoldColumn { bg = "none" },
-        NormalFloat { bg = "none" },
+        NormalFloat { bg = hsl(160, 20, 10) },
         FloatBorder { fg = hsl(180, 60, 60), bg = "none" }, -- Teal border
 
         -- Syntax groups
@@ -96,7 +96,7 @@ local theme = lush(function()
         SpellRare { gui = "undercurl", sp = hsl(300, 60, 60) },
 
         -- Pmenu (completion)
-        Pmenu { fg = hsl(0, 0, 78), bg = "none" },
+        Pmenu { fg = hsl(0, 0, 78), bg = hsl(160, 20, 10) },
         PmenuSel { fg = hsl(160, 80, 50), bg = hsl(160, 20, 20) },
         PmenuSbar { bg = hsl(160, 20, 20) },
         PmenuThumb { bg = hsl(160, 80, 50) },
