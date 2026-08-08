@@ -1,11 +1,18 @@
 return {
     "windwp/nvim-ts-autotag",
     event = "InsertEnter",
-    opts = {
-        enable_close = true,
-        enable_rename = true,
-        enable_close_on_slash = false,
-        disable_filetypes = {"astro"}
-    },
     dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+        opts = {
+            enable_close = true,
+            enable_rename = true,
+            enable_close_on_slash = false,
+        },
+        per_filetype = {
+            ["astro"] = {
+                enable_close = false,
+                enable_rename = false,
+            }
+        }
+    },
 }
