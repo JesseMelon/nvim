@@ -83,11 +83,18 @@ local theme = lush(function()
         Title { fg = hsl(160, 80, 50), gui = "bold" },
         Directory { fg = hsl(180, 60, 60), gui = "bold" },
 
-        -- Diff
-        DiffAdd { fg = hsl(120, 60, 60), bg = "none" },
-        DiffChange { fg = hsl(40, 60, 60), bg = "none" },
-        DiffDelete { fg = hsl(0, 60, 60), bg = "none" },
-        DiffText { fg = hsl(180, 60, 60), bg = "none" },
+        -- Diff (buffer/vimdiff)
+        DiffAdd { fg = hsl(120, 90, 65), bg = hsl(120, 60, 15) },
+        DiffChange { fg = hsl(40, 95, 65), bg = hsl(40, 60, 12) },
+        DiffDelete { fg = hsl(0, 95, 65), bg = hsl(0, 60, 15) },
+        DiffText { fg = hsl(180, 90, 65), bg = hsl(180, 60, 15) },
+        -- Diff (git diff in buffers)
+        Added { fg = hsl(120, 90, 65) },
+        Removed { fg = hsl(0, 95, 65) },
+        Changed { fg = hsl(40, 95, 65) },
+        diffAdded { fg = hsl(120, 90, 65), bg = hsl(120, 60, 15) },
+        diffRemoved { fg = hsl(0, 95, 65), bg = hsl(0, 60, 15) },
+        diffChanged { fg = hsl(40, 95, 65), bg = hsl(40, 60, 12) },
 
         -- Spell
         SpellBad { gui = "undercurl", sp = hsl(0, 80, 60) },

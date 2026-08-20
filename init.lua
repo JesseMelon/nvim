@@ -162,6 +162,22 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+-- Charcoal background for markdown files only
+vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
+    pattern = { "markdown", "*.md" },
+    callback = function()
+        if vim.bo.filetype == "markdown" then
+            vim.api.nvim_set_hl(0, "Normal", { bg = "#1a1a1a" })
+        end
+    end,
+})
+vim.api.nvim_create_autocmd("BufLeave", {
+    pattern = { "*.md" },
+    callback = function()
+        vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    end,
+})
+
 require("config.keymaps")
 
 require("lazy").setup("plugins")

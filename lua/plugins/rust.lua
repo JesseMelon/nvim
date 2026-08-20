@@ -39,8 +39,8 @@ return {
                     end, vim.tbl_extend("force", opts, { desc = "Rust: Hover Actions" }))
                 end,
 
-                default_settings = {
-                    ['rust-analyzer'] = {
+                settings = function(project_root)
+                    local ra = {
                         check = {
                             command = "clippy",
                             extraArgs = { "--no-deps" },
@@ -50,8 +50,13 @@ return {
                             parameterHints = { enable = true },
                             typeHints = { enable = true },
                         },
-                    },
-                },
+                    }
+                    local rust_project = project_root .. "/rust-project.json"
+                    if vim.fn.filereadable(rust_project) == 1 then
+                        ra.linkedProjects = { rust_project }
+                    end
+                    return { ['rust-analyzer'] = ra }
+                end,
             },
         }
     end,
