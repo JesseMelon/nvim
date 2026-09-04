@@ -66,7 +66,6 @@ return {
                 filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
             })
 
-            -- ts_ls example
             vim.lsp.config("ts_ls", {
                 capabilities = capabilities,
                 filetypes = {
@@ -85,7 +84,6 @@ return {
                 },
             })
 
-            -- neocmake ← here is what you want
             vim.lsp.config("neocmake", {
                 capabilities = capabilities,
                 init_options = { command_case = "lower_case", use_snippets = false },
