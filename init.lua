@@ -32,8 +32,8 @@ vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
 vim.api.nvim_set_hl(0, "FoldColumn", { bg = "none" })
 vim.api.nvim_set_hl(0, "VertSplit", { bg = "none" })
 vim.api.nvim_set_hl(0, "WinSeparator", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#003344", bg = "none" }) -- subtle border like Kate
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1a2020" })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#4db8b8", bg = "#1a2020" })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "c", "cpp", "h" }, -- also cover headers
@@ -162,22 +162,8 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
--- Charcoal background for markdown files only
-vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
-    pattern = { "markdown", "*.md" },
-    callback = function()
-        if vim.bo.filetype == "markdown" then
-            vim.api.nvim_set_hl(0, "Normal", { bg = "#1a1a1a" })
-        end
-    end,
-})
-vim.api.nvim_create_autocmd("BufLeave", {
-    pattern = { "*.md" },
-    callback = function()
-        vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-    end,
-})
 
 require("config.keymaps")
+require("remote")
 
 require("lazy").setup("plugins")

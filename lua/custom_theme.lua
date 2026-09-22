@@ -11,8 +11,8 @@ local theme = lush(function()
         EndOfBuffer { bg = "none", fg = hsl(160, 40, 40) },
         SignColumn { bg = "none" },
         FoldColumn { bg = "none" },
-        NormalFloat { bg = "none" },
-        FloatBorder { fg = hsl(180, 60, 60), bg = "none" }, -- Teal border
+        NormalFloat { bg = hsl(210, 15, 13) },
+        FloatBorder { fg = hsl(180, 60, 60), bg = hsl(210, 15, 13) }, -- Teal border
 
         -- Syntax groups
         Comment { fg = hsl(160, 90, 30), gui = "italic" }, -- Emerald green comments #1ad99f
@@ -84,10 +84,10 @@ local theme = lush(function()
         Directory { fg = hsl(180, 60, 60), gui = "bold" },
 
         -- Diff (buffer/vimdiff)
-        DiffAdd { fg = hsl(120, 90, 65), bg = hsl(120, 60, 15) },
-        DiffChange { fg = hsl(40, 95, 65), bg = hsl(40, 60, 12) },
-        DiffDelete { fg = hsl(0, 95, 65), bg = hsl(0, 60, 15) },
-        DiffText { fg = hsl(180, 90, 65), bg = hsl(180, 60, 15) },
+        DiffAdd { bg = hsl(120, 60, 15) },
+        DiffChange { bg = hsl(40, 60, 12) },
+        DiffDelete { bg = hsl(0, 60, 15) },
+        DiffText { bg = hsl(180, 60, 25) },
         -- Diff (git diff in buffers)
         Added { fg = hsl(120, 90, 65) },
         Removed { fg = hsl(0, 95, 65) },
