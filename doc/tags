@@ -1,0 +1,12 @@
+:Rsync	nvim-rsync.txt	/*:Rsync*
+:RsyncAuto	nvim-rsync.txt	/*:RsyncAuto*
+:RsyncLog	nvim-rsync.txt	/*:RsyncLog*
+nvim-rsync	nvim-rsync.txt	/*nvim-rsync*
+nvim-rsync-behaviour	nvim-rsync.txt	/*nvim-rsync-behaviour*
+nvim-rsync-commands	nvim-rsync.txt	/*nvim-rsync-commands*
+nvim-rsync-contents	nvim-rsync.txt	/*nvim-rsync-contents*
+nvim-rsync-fields	nvim-rsync.txt	/*nvim-rsync-fields*
+nvim-rsync-intro	nvim-rsync.txt	/*nvim-rsync-intro*
+nvim-rsync-setup	nvim-rsync.txt	/*nvim-rsync-setup*
+nvim-rsync-trouble	nvim-rsync.txt	/*nvim-rsync-trouble*
+nvim-rsync.txt	nvim-rsync.txt	/*nvim-rsync.txt*

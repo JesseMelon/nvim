@@ -1,0 +1,154 @@
+*nvim-rsync.txt*   Sync a local project to a remote machine for building
+
+==============================================================================
+CONTENTS                                                   *nvim-rsync-contents*
+
+    1. Introduction .......................... |nvim-rsync-intro|
+    2. Setup ................................. |nvim-rsync-setup|
+    3. Configuration fields .................. |nvim-rsync-fields|
+    4. Commands .............................. |nvim-rsync-commands|
+    5. Behaviour and cautions ................ |nvim-rsync-behaviour|
+    6. Troubleshooting ....................... |nvim-rsync-trouble|
+
+==============================================================================
+1. INTRODUCTION                                               *nvim-rsync-intro*
+                                                                   *nvim-rsync*
+
+Edit code on this machine, build it on another one.  |:Rsync| pushes the
+current project to a remote host with rsync.  It never starts a build; you do
+that yourself in an ssh session on the far side.
+
+==============================================================================
+2. SETUP                                                      *nvim-rsync-setup*
+
+Create a file named `.nvim-rsync.json` in any directory ABOVE your project.
+Putting it in the parent of your repository keeps it out of version control,
+so it never needs gitignoring, and one file can describe several projects.
+
+Searching starts at nvim's working directory -- see |:pwd| -- which is where
+you launched nvim, not the file you happen to be editing.  The search walks
+upward and uses the first `.nvim-rsync.json` it finds.
+
+Example, at `/home/me/dev/.nvim-rsync.json`, covering a project in
+`/home/me/dev/myproject`: >
+
+    {
+        "remotes": [
+            {
+                "host":        "build-box.example.com",
+                "local_path":  "/home/me/dev/myproject",
+                "remote_path": "/scratch/me/myproject",
+                "exclude":     ["/out/", "/bazel-*"]
+            }
+        ]
+    }
+<
+Before the first sync, make sure `ssh <host>` connects without asking for a
+password: >
+
+    ssh-copy-id build-box.example.com
+<
+A password prompt has nowhere to appear from inside nvim, so without this the
+sync simply hangs.  See |nvim-rsync-trouble|.
+
+==============================================================================
+3. CONFIGURATION FIELDS                                      *nvim-rsync-fields*
+
+Each entry in "remotes" accepts these keys:
+
+host            Required.  The ssh destination, exactly as you would type it
+                after `ssh`.  May include a user, e.g. "me@build-box".
+
+local_path      Required.  Absolute path of the project on this machine.  This
+                does double duty: it selects which entry applies (the one
+                containing your working directory) and it is what gets sent.
+
+remote_path     Required.  Absolute path on the far side.  Its parent
+                directory must already exist; rsync will not create the whole
+                path for you.
+
+exclude         Optional list of rsync patterns.  A leading "/" anchors the
+                pattern to the project root, so "/out/" skips only a top-level
+                `out` directory and leaves any nested one alone.  Without the
+                anchor the pattern matches at every level.
+
+Listing several entries lets one config file cover several projects, or the
+same project on several machines.  When more than one entry matches your
+working directory, |:Rsync| asks which to use.
+
+==============================================================================
+4. COMMANDS                                               *nvim-rsync-commands*
+
+                                                                      *:Rsync*
+:Rsync [host]       Sync the current project now.
+
+                    With no argument: if exactly one configured remote covers
+                    your working directory it is used, otherwise you are asked
+                    to choose.  With an argument, that host is used directly;
+                    completion offers the configured hosts.
+
+                    On completion reports how many files were sent and
+                    deleted, and how long it took.
+
+                                                                   *:RsyncLog*
+:RsyncLog           Open the full file list from the most recent sync in a
+                    scratch buffer.  Lines are prefixed "send" or "del.".
+                    Held in memory only, so it covers the last run of this
+                    session.
+
+                                                                  *:RsyncAuto*
+:RsyncAuto          Toggle syncing after every |:write|.  Off by default, and
+                    not remembered between sessions.
+
+                    Automatic syncs cannot prompt, so they go to whichever
+                    remote you last picked explicitly.  If several remotes
+                    match and you have not run |:Rsync| yet, saving does
+                    nothing.
+
+==============================================================================
+5. BEHAVIOUR AND CAUTIONS                                 *nvim-rsync-behaviour*
+
+The transfer uses rsync's --delete: the remote becomes a mirror of the local
+tree.  Anything present there but not here is removed.  This is deliberate --
+a stale source file left behind on the remote will keep being compiled and
+produce confusing build results -- but it does mean the remote is not a safe
+place to keep work that exists nowhere else.
+
+`.gitignore` is deliberately NOT consulted.  Ignored files are frequently
+generated build inputs that the remote needs, so filtering by them would break
+builds in ways that are tedious to diagnose.  The consequence is that `.git/`
+is synced too, replacing the remote's repository and its branches, unless you
+add "/.git/" to "exclude".
+
+Preview any of this before the first real run.  This is the same operation
+with --dry-run added, and will list every file it would send or delete: >
+
+    rsync -avn --delete --exclude '/out/' \
+        /home/me/dev/myproject/ build-box:/scratch/me/myproject/
+<
+Look for lines beginning with "deleting".
+
+Syncs run asynchronously and never block the editor.  Repeated saves during a
+running sync queue at most one follow-up rather than piling up.
+
+==============================================================================
+6. TROUBLESHOOTING                                          *nvim-rsync-trouble*
+
+"no .nvim-rsync.json found"
+        The upward search starts at |:pwd|, not at the current file.  Check
+        that your working directory really is inside the project.
+
+"no remote covers this file"
+        A config was found, but no entry's "local_path" contains your working
+        directory.  Check for typos and remember the path must be absolute.
+
+The sync hangs and reports nothing
+        ssh is waiting for a password where you cannot see it.  Run
+        `ssh-copy-id <host>`, or open an ssh session to the host in a terminal
+        first -- connection multiplexing lets the sync reuse it.
+
+Odd path errors on the remote right after a sync
+        The `bazel-*` style symlinks point into a cache directory specific to
+        this machine.  Add them to "exclude".
+
+ vim:tw=78:ts=8:ft=help:norl:
