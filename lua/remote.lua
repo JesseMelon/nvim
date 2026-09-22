@@ -1,3 +1,51 @@
+-- Push a local project to a remote machine with rsync, for editing here and
+-- building there.
+--
+-- SETUP
+--   Create a file named .nvim-rsync.json in any directory *above* your project.
+--   Putting it in the parent of your repo keeps it out of version control, so
+--   it never needs gitignoring and can describe several projects at once.
+--
+--   Starting from nvim's working directory (:pwd -- i.e. where you launched
+--   nvim, not the file you are editing), the nearest such file going upward is
+--   the one used.
+--
+--   {
+--       "remotes": [
+--           {
+--               "host":        "build-box.example.com",
+--               "local_path":  "/home/me/dev/myproject",
+--               "remote_path": "/scratch/me/myproject",
+--               "exclude":     ["/out/", "/bazel-*"]
+--           }
+--       ]
+--   }
+--
+--   host         ssh destination. Must work as `ssh <host>` with no password,
+--                so run `ssh-copy-id <host>` first -- a password prompt has
+--                nowhere to appear from inside nvim and will just hang.
+--   local_path   Absolute path of the project here. This decides BOTH which
+--                entry applies (the one containing your working directory) and
+--                what gets sent. Required.
+--   remote_path  Absolute path on the far side. Its parent must already exist.
+--   exclude      Optional rsync patterns. A leading "/" anchors to the project
+--                root, so "/out/" skips only the top-level out directory.
+--
+--   List several entries to cover several projects, or the same project on
+--   several machines. When more than one entry matches, :Rsync asks which.
+--
+-- IMPORTANT
+--   The transfer uses --delete: the remote becomes a mirror, so anything there
+--   that is not here is removed. .gitignore is deliberately NOT consulted,
+--   since ignored files are often generated build inputs the remote needs --
+--   which also means .git/ is synced unless you exclude it. Preview any of
+--   this with `rsync -avn --delete ...` before the first real run.
+--
+-- COMMANDS
+--   :Rsync [host]   Sync now; completes configured hosts.
+--   :RsyncLog       Show the file list from the last sync.
+--   :RsyncAuto      Toggle syncing on every save (off by default).
+
 local M = {}
 
 local CONFIG = '.nvim-rsync.json'
