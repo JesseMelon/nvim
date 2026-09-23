@@ -6,6 +6,7 @@ return {
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
     opts = {
+        sign = { enabled = false },
         inline_code = {
             enabled = true,
             padding = { left = ' ', right = ' ' },
