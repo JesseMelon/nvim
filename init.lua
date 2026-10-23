@@ -165,5 +165,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 require("config.keymaps")
 require("remote")
+require("license")
+require("genproject")
 
 require("lazy").setup("plugins")
