@@ -84,11 +84,20 @@ vim.api.nvim_create_user_command('LicenseDisable', function()
     vim.notify('license auto-prepend: off')
 end, { desc = 'Stop auto-prepending the license comment' })
 
-vim.api.nvim_create_autocmd('BufNewFile', {
+-- BufReadPost too: file-tree "add file" commands (e.g. neo-tree) create the
+-- file on disk before opening it, so it's an empty *existing* file rather
+-- than a BufNewFile.
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = vim.api.nvim_create_augroup('License', { clear = true }),
     callback = function(a)
         if not M.enabled then return end
-        M.prepend(a.buf)
+        if vim.api.nvim_buf_line_count(a.buf) > 1
+            or vim.api.nvim_buf_get_lines(a.buf, 0, 1, false)[1] ~= '' then
+            return
+        end
+        -- Deferred: filetype detection's own autocmd (which sets
+        -- commentstring) is registered after ours and hasn't run yet here.
+        vim.schedule(function() M.prepend(a.buf) end)
     end,
 })
 
